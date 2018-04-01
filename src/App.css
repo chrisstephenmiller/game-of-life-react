@@ -1,0 +1,17 @@
+table {
+  border: 1px solid black;
+  width: 90vh;
+  height: 90vh
+}
+
+div {
+  display: inline-flex
+}
+
+td.alive {
+  background-color: red
+}
+
+td.dead {
+  background-color: blue
+}
