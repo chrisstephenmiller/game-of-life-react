@@ -5,7 +5,7 @@ table {
 }
 
 div {
-  display: inline-flex
+  width: 90vh;
 }
 
 td.alive {
@@ -14,4 +14,8 @@ td.alive {
 
 td.dead {
   background-color: blue
+}
+
+button {
+  width: 100%;
 }
