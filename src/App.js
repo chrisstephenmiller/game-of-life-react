@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
-const s = 12
+const s = 50
 
 const square = (s) => {
   const x = []
@@ -20,7 +20,6 @@ const square = (s) => {
 
 const game = square(s)
 
-
 class App extends Component {
   constructor() {
     super()
@@ -30,48 +29,40 @@ class App extends Component {
 
   cellClick = (event) => {
     this.toggleState(event.target)
-    this.neighbors(event.target)
-    this.cellState(event.target)
-    // this.step()
+    const game = this.neighbors()
+    this.setState({ game })
   }
 
   toggleState = (cell) => {
-    const g = this.state.game
+    const game = this.state.game
     const x = +cell.id.split('-')[1], y = +cell.id.split('-')[2]
-    g[x][y][0] = g[x][y][0] === 'alive' ? 'dead' : 'alive'
-    this.setState({ g })
+    game[x][y][0] = game[x][y][0] === 'alive' ? 'dead' : 'alive'
   }
 
-  neighbors = (cell) => {
-    const g = this.state.game
-    const x = +cell.id.split('-')[1], y = +cell.id.split('-')[2]
-    const xR = x - 1 < 0 ? x + s - 1 : x - 1
-    const xL = x + 1 === s ? x - s + 1 : x + 1
-    const yD = y - 1 < 0 ? y + s - 1 : y - 1
-    const yU = y + 1 === s ? y - s + 1 : y + 1
-    g[x][y][1] = [g[xL][yU][0], g[x][yU][0], g[xR][yU][0], g[xL][y][0], g[xR][y][0], g[xL][yD][0], g[x][yD][0], g[xR][yD][0]].filter(c => c === 'alive').length
-    console.log (g[x][y][1])
-    console.log (g[x][y])
-    console.log (g[x])
-    this.setState({ g })
-  }
-
-  cellState = (cell) => {
-    const g = this.state.game
-    const x = +cell.id.split('-')[1], y = +cell.id.split('-')[2]
-  }
-
-  step = () => {
-    const g = this.state.game
-    const nextG = g.map(x => {
-      return x.map(y => {
-        return y[1]
-        // return y[0] === 'alive' ? (y[1] < 2 ? `dead` : (y[1] > 3 ? `dead` : `alive`) ) : y[1]
-        // return y[0] === 'alive' ? (y[1] < 2 ? `dead` : (y[1] > 3 ? `dead` : `alive`)) : (y[1] === 3 ? `alive` : `dead`)
+  neighbors = () => {
+    const game = this.state.game
+    return game.map((x, xi) => {
+      return x.map((y, yi) => {
+        const xiL = xi + 1 === s ? xi - s + 1 : xi + 1
+        const xiR = xi - 1 < 0 ? xi + s - 1 : xi - 1
+        const yiU = yi + 1 === s ? yi - s + 1 : yi + 1
+        const yiD = yi - 1 < 0 ? yi + s - 1 : yi - 1
+        return [y[0], [game[xiL][yiU][0], game[xi][yiU][0], game[xiR][yiU][0], game[xiL][yi][0], game[xiR][yi][0], game[xiL][yiD][0], game[xi][yiD][0], game[xiR][yiD][0]].filter(c => c === 'alive').length]
       })
     })
-    // console.log(nextG)
-    this.setState({nextG})
+  }
+
+  step = (event) => {
+    const game = this.neighbors().map(x => {
+      return x.map(y => {
+        return [y[0] === 'alive' ? (y[1] < 2 ? `dead` : (y[1] > 3 ? `dead` : `alive`)) : (y[1] === 3 ? `alive` : `dead`), y[1]]
+      })
+    })
+    this.setState({ game })
+  }
+
+  run = () => {
+    setInterval(this.step, 50);
   }
 
   render() {
@@ -94,7 +85,7 @@ class App extends Component {
             })}
           </tbody>
         </table>
-        <button onClick={this.step}> </button>
+        <button onClick={this.run}> </button>
       </div>
     )
   }
