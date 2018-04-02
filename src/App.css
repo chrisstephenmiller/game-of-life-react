@@ -9,11 +9,11 @@ div {
 }
 
 td.alive {
-  background-color: red
+  background-color: rgb(0, 255, 0)
 }
 
 td.dead {
-  background-color: blue
+  background-color: black
 }
 
 button {

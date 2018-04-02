@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 
-const s = 50
+const s = 40
 
 const square = (s) => {
   const x = []
@@ -52,6 +52,16 @@ class App extends Component {
     })
   }
 
+  random = () => {
+    const g = this.state.game
+    const game = g.map(r => r.map(c => {
+      const density = Math.floor(Math.random() * 2)
+      return density === 1 ? ['dead', c[1]] : [`alive`, c[1]]
+    }))
+    console.log(game)
+    this.setState( {game})
+  }
+
   step = (event) => {
     const game = this.neighbors().map(x => {
       return x.map(y => {
@@ -62,7 +72,7 @@ class App extends Component {
   }
 
   run = () => {
-    setInterval(this.step, 50);
+    setInterval(this.step, 1);
   }
 
   render() {
@@ -86,6 +96,7 @@ class App extends Component {
           </tbody>
         </table>
         <button onClick={this.run}> </button>
+        <button onClick={this.random}> </button>
       </div>
     )
   }
